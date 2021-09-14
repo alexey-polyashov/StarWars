@@ -1,55 +1,45 @@
 package ru.polyan.screen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.polyan.base.BaseScreen;
+import ru.polyan.math.Rect;
+import ru.polyan.sprite.Background;
+import ru.polyan.sprite.Logo;
 
 public class MenuScreen extends BaseScreen {
 
-    Texture img;
+    private Background background;
+    private Logo logo;
 
-    private Vector2 currentPos;
-    private Vector2 newPos;
-
-    private Vector2 currentVelocity;
+    private Texture img;
+    private Texture bg;
 
     @Override
     public void show() {
         super.show();
+
         img = new Texture("badlogic.jpg");
-        currentPos = new Vector2();
-        newPos = new Vector2();
-        currentVelocity = new Vector2();
+        bg = new Texture("textures/bg.png");
+        background = new Background(bg);
+        logo = new Logo(img);
+
+    }
+
+    @Override
+    public void resize(Rect worldBounds) {
+        super.resize(worldBounds);
+        background.resize(worldBounds);
+        logo.resize(worldBounds);
     }
 
     @Override
     public void render(float delta) {
+
         super.render(delta);
-
-        if (!newPos.epsilonEquals(currentPos)){
-
-            currentVelocity.x = newPos.x - currentPos.x;
-            currentVelocity.y = newPos.y - currentPos.y;
-            currentVelocity.nor();
-            if(newPos.dst(currentPos)>10f){
-                currentVelocity.scl(5);
-            }
-
-            currentPos.add(currentVelocity);
-
-        }else{
-            currentPos.x = newPos.x;
-            currentPos.y = newPos.y;
-            currentVelocity.x = 0;
-            currentVelocity.y = 0;
-        }
-
-        batch.begin();
-        batch.draw(img, currentPos.x, currentPos.y);
-        batch.end();
-
+        update(delta);
+        draw();
     }
 
     @Override
@@ -57,10 +47,25 @@ public class MenuScreen extends BaseScreen {
         super.dispose();
     }
 
+
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        newPos.set(screenX, Gdx.graphics.getHeight() - screenY);
-        return super.touchDown(screenX, screenY, pointer, button);
+    public boolean touchDown(Vector2 touch, int pointer, int button) {
+        logo.setNewPosition(new Vector2(touch.x - background.getHalfWidth(),touch.y - background.getHalfHeight()));
+        System.out.println("touchDown screenX = " + touch.x + " screenY = " + touch.y);
+        return super.touchDown(touch, pointer, button);
+    }
+
+    private void update(float delta) {
+
+        logo.update(delta);
+
+    }
+
+    private void draw() {
+        batch.begin();
+        background.draw(batch);
+        logo.draw(batch);
+        batch.end();
     }
 
 }
