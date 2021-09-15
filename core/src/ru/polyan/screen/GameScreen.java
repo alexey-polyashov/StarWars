@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.polyan.base.BaseScreen;
 import ru.polyan.math.Rect;
 import ru.polyan.sprite.Background;
+import ru.polyan.sprite.MainShip;
 import ru.polyan.sprite.Star;
 
 public class GameScreen extends BaseScreen {
@@ -18,6 +19,7 @@ public class GameScreen extends BaseScreen {
 
     private Background background;
     private Star[] stars;
+    private MainShip mainShip;
 
     @Override
     public void show() {
@@ -26,6 +28,7 @@ public class GameScreen extends BaseScreen {
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
 
         background = new Background(bg);
+        mainShip = new MainShip(atlas);
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
@@ -46,6 +49,7 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.resize(worldBounds);
         }
+        mainShip.resize(worldBounds);
     }
 
     @Override
@@ -57,18 +61,37 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        return super.touchDown(touch, pointer, button);
+        super.touchDown(touch, pointer, button);
+        mainShip.touchDown(touch, pointer, button);
+        return false;
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-        return super.touchUp(touch, pointer, button);
+        super.touchUp(touch, pointer, button);
+        mainShip.touchUp(touch, pointer, button);
+        return false;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        super.keyDown(keycode);
+        mainShip.keyDown(keycode);
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        super.keyUp(keycode);
+        mainShip.keyUp(keycode);
+        return false;
     }
 
     private void update(float delta) {
         for (Star star : stars) {
             star.update(delta);
         }
+        mainShip.update(delta);
     }
 
     private void draw() {
@@ -77,6 +100,7 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.draw(batch);
         }
+        mainShip.draw(batch);
         batch.end();
     }
 }
