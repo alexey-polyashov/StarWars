@@ -12,10 +12,14 @@ public class Sprite extends Rect {
     protected float scale = 1;
     protected TextureRegion[] regions;
     protected int frame;
+    private boolean destroyed;
 
     public Sprite(TextureRegion region) {
         regions = new TextureRegion[1];
         regions[0] = region;
+    }
+
+    public Sprite() {
     }
 
     public void setHeightProportion(float height) {
@@ -66,4 +70,17 @@ public class Sprite extends Rect {
                 angle
         );
     }
+
+    public void destroy() {
+        destroyed = true;
+    }
+
+    public void flushDestroy() {
+        destroyed = false;
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
+    }
+
 }
