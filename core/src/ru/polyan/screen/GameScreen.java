@@ -12,6 +12,8 @@ import ru.polyan.math.Rect;
 import ru.polyan.pool.BulletPool;
 import ru.polyan.pool.EnemyPool;
 import ru.polyan.sprite.Background;
+import ru.polyan.sprite.Bullet;
+import ru.polyan.sprite.EnemyShip;
 import ru.polyan.sprite.MainShip;
 import ru.polyan.sprite.Star;
 import ru.polyan.utils.EnemyEmitter;
@@ -54,11 +56,11 @@ public class GameScreen extends BaseScreen {
             stars[i] = new Star(atlas);
         }
 
-
         bgMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         bgMusic.setLooping(true);
         bgMusic.setVolume(0.5f);
         bgMusic.play();
+
     }
 
     @Override
@@ -127,6 +129,23 @@ public class GameScreen extends BaseScreen {
         enemyPool.updateActiveSprites(delta);
 
         enemyEmitter.generate(delta);
+
+        checkDamage();
+
+    }
+
+    private void checkDamage(){
+        for(Bullet b: mainShip.getActiveBullets()){
+            if(b.getOwner()!=mainShip){
+                continue;
+            }
+            for(EnemyShip e: enemyPool.getActiveObjects()){
+                if (e.getHeatBullet() != b && e.isMe(b.pos)){
+                    e.setHp(e.getHp()-b.getDamage());
+                    e.hit(b);
+                }
+            }
+        }
     }
 
     private void freeAllDestroyed() {

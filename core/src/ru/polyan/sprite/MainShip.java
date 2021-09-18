@@ -5,6 +5,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.List;
+
 import ru.polyan.base.Ship;
 import ru.polyan.math.Rect;
 import ru.polyan.pool.BulletPool;
@@ -23,6 +25,8 @@ public class MainShip extends Ship {
     public MainShip(TextureAtlas atlas, BulletPool bulletPool) {
 
         super(atlas.findRegion("main_ship"), 1,2,2);
+
+        weaponIsReady = true;
         shipVelositi = new Vector2(0.3f,0);
         currentVel = new Vector2(0,0);
         pos.set(0,0);
@@ -134,5 +138,6 @@ public class MainShip extends Ship {
         }
 
     }
+
 
 }
