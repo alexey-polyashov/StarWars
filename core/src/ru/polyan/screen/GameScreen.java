@@ -136,13 +136,14 @@ public class GameScreen extends BaseScreen {
 
     private void checkDamage(){
         for(Bullet b: mainShip.getActiveBullets()){
-            if(b.getOwner()!=mainShip){
+            if(b.getOwner()!=mainShip || b.isDestroyed()){
                 continue;
             }
             for(EnemyShip e: enemyPool.getActiveObjects()){
                 if (e.getHeatBullet() != b && e.isMe(b.pos)){
                     e.setHp(e.getHp()-b.getDamage());
                     e.hit(b);
+                    b.destroy();
                 }
             }
         }
