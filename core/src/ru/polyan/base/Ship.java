@@ -8,7 +8,9 @@ import java.util.List;
 
 import ru.polyan.math.Rect;
 import ru.polyan.pool.BulletPool;
+import ru.polyan.pool.ExplosionPool;
 import ru.polyan.sprite.Bullet;
+import ru.polyan.sprite.Explosion;
 
 public class Ship extends Sprite{
 
@@ -35,7 +37,9 @@ public class Ship extends Sprite{
 
     protected int hp;
 
-    protected Bullet heatBullet;
+    protected Sprite heatBullet;
+
+    protected ExplosionPool explosionPool;
 
     public Ship() {
     }
@@ -45,6 +49,10 @@ public class Ship extends Sprite{
         weaponIsReady = false;
         hitPeriod = 0.5f;
         heatBullet = new Bullet();
+    }
+
+    public int getBulletDamage() {
+        return bulletDamage;
     }
 
     @Override
@@ -65,6 +73,7 @@ public class Ship extends Sprite{
                 isHit = false;
                 if(hp<=0){
                     destroy();
+                    explode();
                 }
             }else{
                 hitTimer -= delta;
@@ -76,7 +85,7 @@ public class Ship extends Sprite{
     protected void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, bulletDamage);
-        shootSound.play();
+        shootSound.play(0.1f);
     }
 
     public void dispose(){
@@ -95,18 +104,21 @@ public class Ship extends Sprite{
         this.hp = hp;
     }
 
-    public Bullet getHeatBullet() {
+    public Sprite getHeatBullet() {
         return heatBullet;
     }
 
-    public void hit(Bullet bullet) {
+    public void hit(Sprite bullet) {
         if(heatBullet != bullet) {
             heatBullet = bullet;
             isHit = true;
-            if (isHit) {
-                frame = 1;
-                hitTimer = hitPeriod;
-            }
+            frame = 1;
+            hitTimer = hitPeriod;
         }
+    }
+
+    public void explode(){
+        Explosion e = explosionPool.obtain();
+        e.set(pos, getHeight());
     }
 }
