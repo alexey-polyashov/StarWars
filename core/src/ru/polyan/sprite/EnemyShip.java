@@ -8,28 +8,33 @@ import com.badlogic.gdx.math.Vector2;
 import ru.polyan.base.Ship;
 import ru.polyan.math.Rect;
 import ru.polyan.pool.BulletPool;
+import ru.polyan.pool.ExplosionPool;
 
 public class EnemyShip extends Ship {
 
-    public EnemyShip(BulletPool bulletPool, Rect worldBounds) {
+    public EnemyShip(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds) {
         this.bulletPool = bulletPool;
         this.worldBounds = worldBounds;
         this.bulletV = new Vector2();
         this.bulletPos = new Vector2();
         this.shipVelositi = new Vector2();
         this.currentVel = new Vector2();
+        this.explosionPool = explosionPool;
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
-        bulletPos.set(pos.x, pos.y - getHalfHeight());
         if(getTop() < worldBounds.getTop()){
-            weaponIsReady = true;
+            if(!weaponIsReady) {
+                shootTimer = shootInterval;
+                weaponIsReady = true;
+            }
             currentVel.set(shipVelositi);
         }else{
             currentVel.set(0, -0.5f);
         }
+        bulletPos.set(pos.x, pos.y - getHalfHeight());
         if(getTop()<worldBounds.getBottom()){
             destroy();
         }

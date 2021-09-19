@@ -66,4 +66,12 @@ public abstract class SpritesPool<T extends Sprite> {
             System.out.println(getClass().getSimpleName() + " active/free : " + activeObjects.size() + " / " + freeObjects.size());
         }
     }
+
+    public void reset(){
+        for (T object: activeObjects) {
+            freeObjects.add(object);
+        }
+        activeObjects.clear();
+    }
+
 }

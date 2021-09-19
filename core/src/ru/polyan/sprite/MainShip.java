@@ -10,9 +10,11 @@ import java.util.List;
 import ru.polyan.base.Ship;
 import ru.polyan.math.Rect;
 import ru.polyan.pool.BulletPool;
+import ru.polyan.pool.ExplosionPool;
 
 public class MainShip extends Ship {
 
+    private static final int HP = 100;
     private static final float BOTTOM_POS = 0.05f;
     private static final float SHOT_INTERVAL = 0.5f;
 
@@ -22,7 +24,7 @@ public class MainShip extends Ship {
 
     private float halfField;
 
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool) {
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool) {
 
         super(atlas.findRegion("main_ship"), 1,2,2);
 
@@ -44,6 +46,10 @@ public class MainShip extends Ship {
         this.shootInterval = SHOT_INTERVAL;
 
         this.shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
+
+        this.explosionPool = explosionPool;
+
+        hp = HP;
 
     }
 
@@ -139,5 +145,13 @@ public class MainShip extends Ship {
 
     }
 
+    public void reset(){
+        hp = HP;
+        isLeftKeyPressed = false;
+        isRightKeyPressed = false;
+        isHit = false;
+        pos.x = 0;
+        flushDestroy();
+    }
 
 }
