@@ -141,7 +141,7 @@ public class GameScreen extends BaseScreen {
             }
             for(EnemyShip e: enemyPool.getActiveObjects()){
                 float bulletDst = e.pos.dst(b.pos);
-                if (e.getHeatBullet() != b && e.isMe(b.pos) && b.getTop() > (e.getBottom()+e.getHalfHeight())) {
+                if (e.getHeatBullet() != b && e.isMe(b.pos) && b.getTop() > (e.pos.y)) {
                     e.setHp(e.getHp()-b.getDamage());
                     e.hit(b);
                     b.destroy();
