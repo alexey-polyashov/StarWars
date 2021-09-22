@@ -16,7 +16,7 @@ public class MainShip extends Ship {
 
     private static final int HP = 100;
     private static final float BOTTOM_POS = 0.05f;
-    private static final float SHOT_INTERVAL = 0.5f;
+    private static final float SHOT_INTERVAL = 0.3f;
 
     private boolean isLeftKeyPressed;
     private boolean isRightKeyPressed;

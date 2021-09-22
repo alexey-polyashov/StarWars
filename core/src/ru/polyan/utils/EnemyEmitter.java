@@ -51,6 +51,8 @@ public class EnemyEmitter {
 
     private final EnemyPool enemyPool;
 
+    private int level;
+
     public EnemyEmitter(TextureAtlas atlas, EnemyPool enemyPool, Rect worldBounds, Sound bulletSound) {
         this.enemyPool = enemyPool;
         this.worldBounds = worldBounds;
@@ -61,33 +63,34 @@ public class EnemyEmitter {
         bulletRegion = atlas.findRegion("bulletEnemy");
     }
 
-    public void generate(float delta) {
+    public void generate(float delta, int frags) {
+        level = frags / 10 +1;
         generateTimer += delta;
         if (generateTimer >= GENERATE_INTERVAL) {
             generateTimer = 0f;
             EnemyShip enemyShip = enemyPool.obtain();
             float type = (float) Math.random();
-            if (type < 0.5f) {
+            if (level<10 || type < 0.5f) {
                 enemyShip.set(
                         enemySmallRegions,
                         enemySmallV,
                         bulletRegion,
                         ENEMY_SMALL_BULLET_HEIGHT,
                         enemySmallBulletV,
-                        ENEMY_SMALL_BULLET_DAMAGE,
+                        ENEMY_SMALL_BULLET_DAMAGE* level,
                         ENEMY_SMALL_RELOAD_INTERVAL,
                         bulletSound,
                         ENEMY_SMALL_HEIGHT,
                         ENEMY_SMALL_HP
                 );
-            } else if (type < 0.8f) {
+            } else if (level<20 || type < 0.8f) {
                 enemyShip.set(
                         enemyMediumRegions,
                         enemyMediumV,
                         bulletRegion,
                         ENEMY_MEDIUM_BULLET_HEIGHT,
                         enemyMediumBulletV,
-                        ENEMY_MEDIUM_BULLET_DAMAGE,
+                        ENEMY_MEDIUM_BULLET_DAMAGE* level,
                         ENEMY_MEDIUM_RELOAD_INTERVAL,
                         bulletSound,
                         ENEMY_MEDIUM_HEIGHT,
@@ -100,7 +103,7 @@ public class EnemyEmitter {
                         bulletRegion,
                         ENEMY_BIG_BULLET_HEIGHT,
                         enemyBigBulletV,
-                        ENEMY_BIG_BULLET_DAMAGE,
+                        ENEMY_BIG_BULLET_DAMAGE* level,
                         ENEMY_BIG_RELOAD_INTERVAL,
                         bulletSound,
                         ENEMY_BIG_HEIGHT,
@@ -113,5 +116,9 @@ public class EnemyEmitter {
             );
             enemyShip.setBottom(worldBounds.getTop());
         }
+    }
+
+    public int getLevel() {
+        return level;
     }
 }
