@@ -27,7 +27,7 @@ public class EnemyShip extends Ship {
         super.update(delta);
         if(getTop() < worldBounds.getTop()){
             if(!weaponIsReady) {
-                shootTimer = shootInterval;
+                shootTimer = shootInterval*0.8f;
                 weaponIsReady = true;
             }
             currentVel.set(shipVelositi);
@@ -62,6 +62,8 @@ public class EnemyShip extends Ship {
         this.shootSound = bulletSound;
         setHeightProportion(height);
         this.hp = hp;
+        shootTimer = 0;
+        this.bulletPos.set(pos.x, pos.y - getHalfHeight());
         currentVel.set(shipVelositi);
     }
 
