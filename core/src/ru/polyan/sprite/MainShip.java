@@ -14,7 +14,7 @@ import ru.polyan.pool.ExplosionPool;
 
 public class MainShip extends Ship {
 
-    private static final int HP = 100;
+    private static final int HP = 50;
     private static final float BOTTOM_POS = 0.05f;
     private static final float SHOT_INTERVAL = 0.3f;
 
@@ -28,7 +28,7 @@ public class MainShip extends Ship {
 
         super(atlas.findRegion("main_ship"), 1,2,2);
 
-        weaponIsReady = true;
+        weaponIsReady = false;
         shipVelositi = new Vector2(0.3f,0);
         currentVel = new Vector2(0,0);
         pos.set(0,0);
@@ -48,6 +48,7 @@ public class MainShip extends Ship {
         this.shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
 
         this.explosionPool = explosionPool;
+        this.bulletPos.set(pos.x, pos.y + getHalfHeight());
 
         hp = HP;
 
@@ -93,7 +94,6 @@ public class MainShip extends Ship {
     public void update(float delta) {
         super.update(delta);
         processKeyEvent();
-        bulletPos.set(pos.x, pos.y + getHalfHeight());
     }
 
     private void checkAndHandleBounds() {

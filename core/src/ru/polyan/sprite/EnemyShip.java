@@ -9,8 +9,12 @@ import ru.polyan.base.Ship;
 import ru.polyan.math.Rect;
 import ru.polyan.pool.BulletPool;
 import ru.polyan.pool.ExplosionPool;
+import ru.polyan.utils.EnemyEmitter;
 
 public class EnemyShip extends Ship {
+
+    protected boolean xMov;
+    protected float moveChangePeriod = 0f;
 
     public EnemyShip(BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds) {
         this.bulletPool = bulletPool;
@@ -30,13 +34,39 @@ public class EnemyShip extends Ship {
                 shootTimer = shootInterval*0.8f;
                 weaponIsReady = true;
             }
-            currentVel.set(shipVelositi);
+            currentVel.y = shipVelositi.y;
         }else{
             currentVel.set(0, -0.5f);
         }
-        bulletPos.set(pos.x, pos.y - getHalfHeight());
+        if(xMov){
+            if(moveChangePeriod > 0){
+                moveChangePeriod-=delta;
+            }else{
+                moveChangePeriod = (float) Math.random() * 2f;
+                currentVel.x = ((float) Math.random()-0.5f)*0.3f ;
+            }
+            //System.out.println(moveChangePeriod + " " + currentVel.x);
+        }
+        bulletPos.y = pos.y - getHalfHeight();
+        if(dualShoot && xMov){
+            bulletPos.x = pos.x + getHalfWidth() * currentGun*0.5f;
+        }
+        checkBounds();
+    }
+
+    public void launch(EnemyEmitter enemyEmitter) {
+        enemyEmitter.launchSmalShip(pos);
+    }
+
+    private void checkBounds(){
         if(getTop()<worldBounds.getBottom()){
             destroy();
+        }
+        if(getRight()<worldBounds.getRight()){
+            currentVel.x = -currentVel.x;
+        }
+        if(getLeft()>worldBounds.getLeft()){
+            currentVel.x = -currentVel.x;
         }
     }
 
@@ -50,8 +80,12 @@ public class EnemyShip extends Ship {
             float reloadInterval,
             Sound bulletSound,
             float height,
-            int hp
+            int hp,
+            boolean dualShoot,
+            boolean xMov,
+            boolean flagman
     ) {
+
         this.regions = regions;
         this.shipVelositi.set(shipVelositi);
         this.bulletRegion = bulletRegion;
@@ -62,9 +96,21 @@ public class EnemyShip extends Ship {
         this.shootSound = bulletSound;
         setHeightProportion(height);
         this.hp = hp;
+        this.flagman = flagman;
+        this.dualShoot = dualShoot;
+        this.xMov = xMov;
+
+        launchPeriod = (float) Math.random() * 3f;
         shootTimer = 0;
-        this.bulletPos.set(pos.x, pos.y - getHalfHeight());
+        if(dualShoot){
+            currentGun = 1;
+        }else{
+            currentGun = 0;
+        }
+
+        this.bulletPos.set(pos.x + getHalfWidth() * currentGun, pos.y - getHalfHeight());
         currentVel.set(shipVelositi);
+
     }
 
 }

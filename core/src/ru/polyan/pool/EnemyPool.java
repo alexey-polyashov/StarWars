@@ -3,6 +3,7 @@ package ru.polyan.pool;
 import ru.polyan.base.SpritesPool;
 import ru.polyan.math.Rect;
 import ru.polyan.sprite.EnemyShip;
+import ru.polyan.utils.EnemyEmitter;
 
 public class EnemyPool extends SpritesPool<EnemyShip> {
 

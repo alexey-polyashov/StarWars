@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import ru.polyan.base.SpritesPool;
 import ru.polyan.sprite.Explosion;
+import ru.polyan.utils.EnemyEmitter;
 
 public class ExplosionPool extends SpritesPool<Explosion> {
 
